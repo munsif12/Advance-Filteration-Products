@@ -2,7 +2,6 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import NumberFormat from "react-number-format";
 function Product({ Products }) {
-  console.log(Products);
   const history = useHistory();
   function numberFormater(number, type) {
     return (
