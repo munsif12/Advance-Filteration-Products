@@ -35,3 +35,99 @@
   font-size: 22px;
   font-weight: lighter;
 }
+.Searchbarwrapper {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 30px 10px 10px 10px;
+}
+.searchBar {
+  display: flex;
+  justify-content: center;
+}
+/* .searchBar {
+  width: 100%;
+  border: 1px solid black;
+} */
+.searchBar form {
+  width: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 25px;
+}
+.searchBar .icons {
+  margin-right: 10px;
+  background: transparent;
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  cursor: pointer;
+  margin-left: 20px;
+  color: rgb(154 151 151);
+}
+.searchBar input {
+  width: 50%;
+  border: none;
+  padding: 10px;
+  outline: none;
+  font-size: 16px;
+  color: #333;
+  background: #fff;
+  transition: all 0.3s;
+  width: 70%;
+}
+.Products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.singleProd {
+  min-height: 30vh;
+  width: 250px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.singleProd:hover {
+  transform: scale(1.05);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+}
+.commonProduct {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.infoBoxWrapper {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+.imgBox {
+  height: 200px;
+  width: 90%;
+}
+.imgBox > img {
+  height: 100%;
+  width: 100%;
+}
+.infoBox {
+  padding: 10px 0px 0px 0px;
+}
+.infoBox .Prodname p {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
