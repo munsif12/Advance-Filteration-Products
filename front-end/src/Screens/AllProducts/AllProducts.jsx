@@ -10,33 +10,36 @@ function AllProducts() {
   const [visible, setvisible] = useState(false);
   const [childDrawer, setChildDrawer] = useState();
   const [SearchFiled, setSearchFiled] = useState("");
-  const [Products, setProducts] = useState([]);
-
+  const [Products, setProducts] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pages = new Array(totalPages).fill(null).map((item, index) => index);
   // state = { visible: false, childrenDrawer: false };
-  async function fetchProducts() {
-    const params = new URLSearchParams(window.location.search);
-    const page = params.get("page");
-    const limit = params.get("limit");
-    console.log(page + " " + limit);
+  async function fetchProducts(pageNumber) {
     if (SearchFiled) {
-      console.log(SearchFiled);
       const { data } = await axios.get(
-        `http://localhost:8000/?name[regex]=${SearchFiled}&name[options]=i&page=${params.get(
-          "page"
-        )}&limit=${params.get("limit")}`
+        `http://localhost:8000/?name[regex]=${SearchFiled}&name[options]=i&page=${pageNumber}&limit=4`
       );
-      console.log(data);
       setProducts(data);
+      setTotalPages(data.totalPages);
     } else {
-      const { data } = await axios.get(`http://localhost:8000/`);
+      const { data } = await axios.get(
+        `http://localhost:8000/?page=${pageNumber}&limit=4`
+      );
       setProducts(data);
+      setTotalPages(data.totalPages);
     }
   }
-
   useEffect(() => {
     //create an axios fetch request to get the
-    fetchProducts();
-  }, [SearchFiled]);
+    fetchProducts(pageNumber);
+  }, [SearchFiled, pageNumber]);
+  function gotoNext() {
+    setPageNumber(Math.min(totalPages, pageNumber + 1));
+  }
+  function gotoPrevious() {
+    setPageNumber(Math.max(1, pageNumber - 1));
+  }
   return (
     <div className="all_product container">
       <div className="Searchbarwrapper row">
@@ -56,11 +59,10 @@ function AllProducts() {
         </div>
       </div>
       <div className="row Products">
-        {console.log(Products)}
         {Products.length === 0 ? (
-          <h1>Soory no product available</h1>
+          <h1>Sorry no product available</h1>
         ) : (
-          Products.map((prod, index) => (
+          Products.user.map((prod, index) => (
             <div className="col-md-12 singleProd">
               <div key={index} className={`product${index + 1} commonProduct`}>
                 <div className="imgBox">
@@ -83,6 +85,26 @@ function AllProducts() {
           ))
         )}
       </div>
+      {SearchFiled === "" && (
+        <div className="pagesCountBar">
+          <Button type="primary" className="pagination" onClick={gotoPrevious}>
+            Previous Page
+          </Button>
+          {pages.map((page, index) => (
+            <Button
+              key={index}
+              type="primary"
+              className="pagination"
+              onClick={() => setPageNumber(page + 1)}
+            >
+              {page + 1}
+            </Button>
+          ))}
+          <Button type="primary" className="pagination" onClick={gotoNext}>
+            Next Page
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
