@@ -131,3 +131,12 @@
   color: #333;
   margin: 0;
 }
+.pagesCountBar {
+  display: inline;
+  float: right;
+  margin-right: 25px;
+}
+.pagination {
+  margin: 2px 5px;
+  cursor: pointer;
+}
