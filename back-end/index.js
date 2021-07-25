@@ -12,8 +12,6 @@ app.use(express.json());
 //create a get request for the home page
 app.get("/", async function (req, res) {
   const { sort, fields, page, limit, ...restQuery } = req.query;
-  console.log(page + " " + limit);
-  console.log(req.query);
   const query = JSON.stringify(restQuery);
   const addDollerSign = query.replace(
     /\b(gt|lt|lte|gte|in|all|regex|options)\b/g,
@@ -27,16 +25,15 @@ app.get("/", async function (req, res) {
   } else {
     user = user.sort("price -createdAt");
   }
-  //fields to be returned
-  //   const pageNo = page;
-  //   const limitTo = limit;
-  //   console.log(pageNo + "" + limitTo);
-  //   const skip = (pageNo - 1) * limit;
-  //   user = user.skip(skip).limit(Number(limitTo));
-  //   const totalDocuments = await userDetails.countDocuments();
-
+  //pagination
+  var pageNo = page || 1;
+  var limitTo = limit || 3;
+  console.log(pageNo + " " + limitTo);
+  const skip = (pageNo - 1) * limit;
+  user = user.skip(Number(skip)).limit(Number(limitTo));
+  const totalDocuments = await Product.countDocuments();
   user = await user;
-  res.json(user);
+  res.json({ totalPages: Math.ceil(totalDocuments / limitTo), user });
 });
 
 //create listner request for the home <page>
