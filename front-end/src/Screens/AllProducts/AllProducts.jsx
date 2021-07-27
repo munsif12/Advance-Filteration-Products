@@ -1,24 +1,52 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Button } from "antd";
+import { Drawer, Button, Typography } from "antd";
 import CallReceivedIcon from "@material-ui/icons/CallReceived";
 import NestedDrawer from "./Drawer";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import {
+  FormControl,
+  Grid,
+  Slider,
+  TextField,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+} from "@material-ui/core";
 function AllProducts() {
+  const history = useHistory();
+  const location = useLocation();
+  const params = location.search && location.search;
+  console.log(params);
   const [visible, setvisible] = useState(false);
-  const [childDrawer, setChildDrawer] = useState();
+  const [childDrawerPrice, setChildDrawerPrice] = useState("");
+  const [ChildDrawerNewest, setChildDrawerNewest] = useState("");
   const [SearchFiled, setSearchFiled] = useState("");
   const [Products, setProducts] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  //realted to slider
+  const [minPrice, setminPrice] = useState(0);
+  const [maxPrice, setmaxPrice] = useState(100);
+  const [sliderMaxRange, setsliderMaxRange] = useState(10000000);
+  const [sliderPriceRange, setsliderPriceRange] = useState([120, 1000]);
+  const [filter, setfilter] = useState("");
+
+  //if pages = 5 then the result of below array is [1,2,3,4,5]
   const pages = new Array(totalPages).fill(null).map((item, index) => index);
   // state = { visible: false, childrenDrawer: false };
   async function fetchProducts(pageNumber) {
+    let query;
+    if (params && !filter) {
+      query = params;
+    } else {
+      query = filter;
+    }
     if (SearchFiled) {
       const { data } = await axios.get(
-        `http://localhost:8000/?name[regex]=${SearchFiled}&name[options]=i&page=${pageNumber}&limit=4`
+        `http://localhost:8000/${query}&name[regex]=${SearchFiled}&name[options]=i&page=${pageNumber}&limit=4`
       );
       setProducts(data);
       setTotalPages(data.totalPages);
@@ -33,17 +61,43 @@ function AllProducts() {
   useEffect(() => {
     //create an axios fetch request to get the
     fetchProducts(pageNumber);
-  }, [SearchFiled, pageNumber]);
+  }, [SearchFiled, pageNumber, filter]);
   function gotoNext() {
     setPageNumber(Math.min(totalPages, pageNumber + 1));
   }
   function gotoPrevious() {
     setPageNumber(Math.max(1, pageNumber - 1));
   }
+  function showDrawer() {
+    setvisible(true);
+  }
+  function onClose() {
+    setvisible(false);
+  }
+  function showChildDrawerPrice() {
+    setChildDrawerPrice(true);
+  }
+  function closeChildDrawerPrice() {
+    setChildDrawerPrice(false);
+  }
+  function showChildDrawerNewest() {
+    setChildDrawerNewest(true);
+  }
+  function closeChildDrawerNewest() {
+    setChildDrawerNewest(false);
+  }
+  function builtRangeFilter(newVal) {
+    const url = `?price[gte]=${newVal[0]}&price[lte]=${newVal[1]}`;
+    setfilter(url);
+    history.push(url);
+  }
+  function SliderChangeComitted(e, newVal) {
+    builtRangeFilter(newVal);
+  }
   return (
     <div className="all_product container">
       <div className="Searchbarwrapper row">
-        <div className="searchBar col-xs-12 col-lg-12 col-md-12">
+        <div className="searchBar col-xs-8 col-lg-8 col-md-8">
           <form action="">
             <SearchIcon className="icons" />
             <input
@@ -56,6 +110,116 @@ function AllProducts() {
               onChange={(e) => setSearchFiled(e.target.value)}
             />
           </form>
+          <div className="filterArea">
+            <Button
+              type="primary"
+              onClick={showDrawer}
+              className="filterAndSortButton "
+            >
+              Filter & Sort
+            </Button>
+            <Drawer
+              title="Filter & Sort"
+              width={520}
+              closable={false}
+              onClose={onClose}
+              visible={visible}
+            >
+              <div
+                className="filter_price f_common"
+                onClick={showChildDrawerPrice}
+              >
+                <p type="primary">Price</p>
+                <CallReceivedIcon />
+              </div>
+              <Drawer
+                title="Two-level Drawer"
+                width={420}
+                closable={false}
+                onClose={closeChildDrawerPrice}
+                visible={childDrawerPrice}
+              >
+                {/* material ui row */}
+                <div className="minMaxPriceFiels">
+                  <Slider
+                    min={0}
+                    max={sliderMaxRange}
+                    value={sliderPriceRange}
+                    valueLabelDisplay="auto"
+                    onChange={(e, v) => {
+                      setsliderPriceRange(v);
+                    }}
+                    onChangeCommitted={SliderChangeComitted}
+                  />
+                  <div className="minMaxWrapper">
+                    <div className="minVal">
+                      <TextField
+                        type="number"
+                        size="small"
+                        label="Min Price"
+                        id="price"
+                        name="price"
+                        value={minPrice}
+                        onChange={(e) => setminPrice(e.target.value)}
+                      />
+                    </div>
+                    <div className="maxPrice">
+                      <TextField
+                        type="number"
+                        size="small"
+                        label="Max Price"
+                        id="price"
+                        name="price"
+                        value={maxPrice}
+                        onChange={(e) => setmaxPrice(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Drawer>
+
+              <div
+                className="filter_color f_common"
+                onClick={showChildDrawerNewest}
+              >
+                <p type="primary">Sort</p>
+                <CallReceivedIcon />
+              </div>
+              <Drawer
+                title="Two-level Drawer"
+                width={320}
+                closable={false}
+                onClose={closeChildDrawerNewest}
+                visible={ChildDrawerNewest}
+              >
+                <Grid item xs={12} sm={6}>
+                  <Typography gutterBottom>Sort By</Typography>
+                  <FormControl compoent="filedset">
+                    <RadioGroup aria-label="Sort By" name="sort">
+                      <FormControlLabel
+                        value="name"
+                        control={<Radio />}
+                        label="Price :Highest to Lowest"
+                      />
+                      <FormControlLabel
+                        value="name"
+                        control={<Radio />}
+                        label="Price :Lowest to Highest"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+              </Drawer>
+              <div className="filter_newest f_common">
+                <p type="primary">Newest</p>
+                <CallReceivedIcon />
+              </div>
+              <div className="filter_sort  f_common">
+                <p type="primary">Color</p>
+                <CallReceivedIcon />
+              </div>
+            </Drawer>
+          </div>
         </div>
       </div>
       <div className="row Products">
@@ -110,51 +274,3 @@ function AllProducts() {
 }
 
 export default AllProducts;
-
-/* 
-
-  function showDrawer() {
-    setvisible(true);
-  }
-  function onClose() {
-    setvisible(false);
-  }
-  function showChildDrawer() {
-    setChildDrawer(true);
-  }
-  function closeChildDrawer() {
-    setChildDrawer(false);
-  } 
-  
-  
-  
-  <div className="filterArea">
-        <Button type="primary" onClick={showDrawer}>
-          Filter & Sort
-        </Button>
-        <Drawer
-          title="Filter & Sort"
-          width={520}
-          closable={false}
-          onClose={onClose}
-          visible={visible}
-        >
-          <div className="filter_price f_common">
-            <p type="primary">Price</p>
-            <CallReceivedIcon />
-          </div>
-          <div className="filter_color f_common">
-            <p type="primary">Color</p>
-            <CallReceivedIcon />
-          </div>
-          <div className="filter_newest f_common">
-            <p type="primary">Newest</p>
-            <CallReceivedIcon />
-          </div>
-          <div className="filter_sort  f_common">
-            <p type="primary">Sort</p>
-            <CallReceivedIcon />
-          </div>
-        </Drawer>
-      </div> 
-  */
