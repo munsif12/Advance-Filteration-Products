@@ -42,10 +42,12 @@
   align-items: center;
   width: 100%;
   padding: 30px 10px 10px 10px;
+  position: relative;
 }
 .searchBar {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 /* .searchBar {
   width: 100%;
@@ -80,6 +82,39 @@
   background: #fff;
   transition: all 0.3s;
   width: 70%;
+}
+.filterArea {
+  margin-left: 50px;
+}
+.filterAndSortButton {
+  height: 44px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 5px 60px 0 rgba(0, 0, 248, 0.25);
+  transition: 500ms;
+  animation: input-shadow ease 2s infinite;
+}
+@keyframes input-shadow {
+  0% {
+    box-shadow: none;
+  }
+  25% {
+    box-shadow: 0px 2px 30px 5px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0px 2px 30px 5px rgba(0, 255, 0, 0.5);
+  }
+  75% {
+    box-shadow: 0px 2px 30px 5px rgba(57, 143, 255, 0.5);
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+.filterAndSortButton:hover {
+  box-shadow: 0 10px 60px 0 rgba(0, 0, 248, 0.25);
 }
 .Products {
   display: flex;
@@ -137,6 +172,6 @@
   margin-right: 25px;
 }
 .pagination {
-  margin: 2px 5px;
+  margin: 2px;
   cursor: pointer;
 }
