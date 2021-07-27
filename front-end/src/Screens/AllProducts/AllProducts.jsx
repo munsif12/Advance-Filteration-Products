@@ -30,10 +30,10 @@ function AllProducts() {
   //realted to slider
   const [minPrice, setminPrice] = useState(0);
   const [maxPrice, setmaxPrice] = useState(100);
-  const [sliderMaxRange, setsliderMaxRange] = useState(10000000);
-  const [sliderPriceRange, setsliderPriceRange] = useState([120, 1000]);
   const [filter, setfilter] = useState("");
-
+  //relatedToRadio
+  const [PriceOrder, setPriceOrder] = useState("price");
+  const [sorting, setsorting] = useState("");
   //if pages = 5 then the result of below array is [1,2,3,4,5]
   const pages = new Array(totalPages).fill(null).map((item, index) => index);
   // state = { visible: false, childrenDrawer: false };
@@ -44,24 +44,45 @@ function AllProducts() {
     } else {
       query = filter;
     }
+    if (sorting) {
+      if (sorting.length === 0) {
+        query = `?sort=${sorting}`;
+      }
+      query = `${query}&sort=${sorting}`;
+    }
+
     if (SearchFiled) {
-      const { data } = await axios.get(
-        `http://localhost:8000/${query}&name[regex]=${SearchFiled}&name[options]=i&page=${pageNumber}&limit=4`
-      );
-      setProducts(data);
-      setTotalPages(data.totalPages);
+      if (!query) {
+        const { data } = await axios.get(
+          `http://localhost:8000/?name[regex]=${SearchFiled}&name[options]=i`
+        );
+        setProducts(data);
+        setTotalPages(data.totalPages);
+      } else {
+        const { data } = await axios.get(
+          `http://localhost:8000/${query}&name[regex]=${SearchFiled}&name[options]=i`
+        );
+        setProducts(data);
+        setTotalPages(data.totalPages);
+      }
     } else {
-      const { data } = await axios.get(
-        `http://localhost:8000/?page=${pageNumber}&limit=4`
-      );
-      setProducts(data);
-      setTotalPages(data.totalPages);
+      if (!query) {
+        const { data } = await axios.get(
+          `http://localhost:8000/?page=${pageNumber}&limit=10`
+        );
+        setProducts(data);
+        setTotalPages(data.totalPages);
+      } else {
+        const { data } = await axios.get(`http://localhost:8000/${query}`);
+        setProducts(data);
+        setTotalPages(data.totalPages);
+      }
     }
   }
   useEffect(() => {
     //create an axios fetch request to get the
     fetchProducts(pageNumber);
-  }, [SearchFiled, pageNumber, filter]);
+  }, [SearchFiled, pageNumber, filter, sorting]);
   function gotoNext() {
     setPageNumber(Math.min(totalPages, pageNumber + 1));
   }
@@ -86,13 +107,18 @@ function AllProducts() {
   function closeChildDrawerNewest() {
     setChildDrawerNewest(false);
   }
-  function builtRangeFilter(newVal) {
-    const url = `?price[gte]=${newVal[0]}&price[lte]=${newVal[1]}`;
+  function getMinMaxPrice() {
+    let url = `?price[gte]=${minPrice}&price[lte]=${maxPrice}&page=${pageNumber}&limit=10`;
     setfilter(url);
     history.push(url);
   }
-  function SliderChangeComitted(e, newVal) {
-    builtRangeFilter(newVal);
+  function handleSortChange(e) {
+    setPriceOrder(e.target.value);
+    if (e.target.value === "price") {
+      setsorting("price");
+    } else if (e.target.value === "-price") {
+      setsorting("-price");
+    }
   }
   return (
     <div className="all_product container">
@@ -133,7 +159,7 @@ function AllProducts() {
                 <CallReceivedIcon />
               </div>
               <Drawer
-                title="Two-level Drawer"
+                title="Set your price range"
                 width={420}
                 closable={false}
                 onClose={closeChildDrawerPrice}
@@ -141,16 +167,6 @@ function AllProducts() {
               >
                 {/* material ui row */}
                 <div className="minMaxPriceFiels">
-                  <Slider
-                    min={0}
-                    max={sliderMaxRange}
-                    value={sliderPriceRange}
-                    valueLabelDisplay="auto"
-                    onChange={(e, v) => {
-                      setsliderPriceRange(v);
-                    }}
-                    onChangeCommitted={SliderChangeComitted}
-                  />
                   <div className="minMaxWrapper">
                     <div className="minVal">
                       <TextField
@@ -161,6 +177,7 @@ function AllProducts() {
                         name="price"
                         value={minPrice}
                         onChange={(e) => setminPrice(e.target.value)}
+                        onBlur={getMinMaxPrice}
                       />
                     </div>
                     <div className="maxPrice">
@@ -172,6 +189,7 @@ function AllProducts() {
                         name="price"
                         value={maxPrice}
                         onChange={(e) => setmaxPrice(e.target.value)}
+                        onBlur={getMinMaxPrice}
                       />
                     </div>
                   </div>
@@ -195,14 +213,19 @@ function AllProducts() {
                 <Grid item xs={12} sm={6}>
                   <Typography gutterBottom>Sort By</Typography>
                   <FormControl compoent="filedset">
-                    <RadioGroup aria-label="Sort By" name="sort">
+                    <RadioGroup
+                      aria-label="Sort By"
+                      name="sort"
+                      value={PriceOrder}
+                      onChange={handleSortChange}
+                    >
                       <FormControlLabel
-                        value="name"
+                        value="-price"
                         control={<Radio />}
                         label="Price :Highest to Lowest"
                       />
                       <FormControlLabel
-                        value="name"
+                        value="price"
                         control={<Radio />}
                         label="Price :Lowest to Highest"
                       />
@@ -210,10 +233,6 @@ function AllProducts() {
                   </FormControl>
                 </Grid>
               </Drawer>
-              <div className="filter_newest f_common">
-                <p type="primary">Newest</p>
-                <CallReceivedIcon />
-              </div>
               <div className="filter_sort  f_common">
                 <p type="primary">Color</p>
                 <CallReceivedIcon />
