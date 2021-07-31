@@ -175,3 +175,7 @@
   margin: 2px;
   cursor: pointer;
 }
+.minMaxWrapper {
+  display: flex;
+  gap: 20px;
+}
