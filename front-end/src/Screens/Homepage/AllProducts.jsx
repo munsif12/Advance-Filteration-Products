@@ -2,27 +2,27 @@ import React, { useState, useEffect } from "react";
 import "../../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import Product from "../../components/Homepage/Product";
 import Pagination from "../../components/Homepage/Pagination";
 import MainFilterDrawer from "../../components/Homepage/MainFilterDrawer";
 import SearchProduct from "../../components/Homepage/SearchProduct";
+import { Button } from "antd";
 
 function AllProducts() {
+  const history = useHistory();
   const location = useLocation();
-  const params = location.search && location.search;
-  console.log(params);
-
+  let params = location.search && location.search;
   const [SearchFiled, setSearchFiled] = useState("");
   const [Products, setProducts] = useState("");
+  console.log(Products);
+  console.log(Products);
   const [totalPages, setTotalPages] = useState(1);
   const [pageNumber, setPageNumber] = useState(1);
   const [filter, setfilter] = useState("");
   const [sorting, setsorting] = useState("");
   //if pages = 5 then the result of below array is [1,2,3,4,5]
   const pages = new Array(totalPages).fill(null).map((item, index) => index);
-  console.log(pages.length);
-  // state = { visible: false, childrenDrawer: false };
   async function fetchProducts(pageNumber) {
     let query;
     if (params && !filter) {
@@ -40,27 +40,27 @@ function AllProducts() {
     if (SearchFiled) {
       if (!query) {
         const { data } = await axios.get(
-          `http://localhost:8000/?name[regex]=${SearchFiled}&name[options]=i`
+          `http://localhost:8001/?name[regex]=${SearchFiled}&name[options]=i`
         );
-        setProducts(data);
+        setProducts(data.user);
         setTotalPages(data.totalPages);
       } else {
         const { data } = await axios.get(
-          `http://localhost:8000/${query}&name[regex]=${SearchFiled}&name[options]=i`
+          `http://localhost:8001/${query}&name[regex]=${SearchFiled}&name[options]=i`
         );
-        setProducts(data);
+        setProducts(data.user);
         setTotalPages(data.totalPages);
       }
     } else {
       if (!query) {
         const { data } = await axios.get(
-          `http://localhost:8000/?page=${pageNumber}&limit=10`
+          `http://localhost:8001/?page=${pageNumber}&limit=10`
         );
-        setProducts(data);
+        setProducts(data.user);
         setTotalPages(data.totalPages);
       } else {
-        const { data } = await axios.get(`http://localhost:8000/${query}`);
-        setProducts(data);
+        const { data } = await axios.get(`http://localhost:8001/${query}`);
+        setProducts(data.user);
         setTotalPages(data.totalPages);
       }
     }
@@ -86,6 +86,11 @@ function AllProducts() {
           <div className="filterArea">
             <MainFilterDrawer setsorting={setsorting} setfilter={setfilter} />
           </div>
+          {params !== "" && (
+            <Button onClick={() => history.push(`/${params}`)}>
+              Clear Filters
+            </Button>
+          )}
         </div>
       </div>
       <div className="row Products">
