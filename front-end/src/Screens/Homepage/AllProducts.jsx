@@ -68,6 +68,7 @@ function AllProducts() {
   useEffect(() => {
     //create an axios fetch request to get the
     fetchProducts(pageNumber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [SearchFiled, pageNumber, filter, sorting]);
 
   //pagination
