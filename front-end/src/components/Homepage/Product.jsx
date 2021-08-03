@@ -1,13 +1,32 @@
 import React from "react";
-
+import { useHistory } from "react-router-dom";
+import NumberFormat from "react-number-format";
 function Product({ Products }) {
+  console.log(Products);
+  const history = useHistory();
+  function numberFormater(number, type) {
+    return (
+      <NumberFormat
+        value={number}
+        displayType={"text"}
+        // thousandsGroupStyle={true}
+        thousandSeparator={true}
+        thousandsGroupStyle="lakh"
+        decimalScale={2}
+        fixedDecimalScale={type === "curr" ? true : false}
+      />
+    );
+  }
   return (
     <>
       {Products.length === 0 ? (
         <h1>Sorry no product available</h1>
       ) : (
-        Products.user.map((prod, index) => (
-          <div className="col-md-12 singleProd">
+        Products.map((prod, index) => (
+          <div
+            className="col-md-12 singleProd prod"
+            onClick={() => history.push(`/product/${prod._id}`)}
+          >
             <div key={index} className={`product${index + 1} commonProduct`}>
               <div className="imgBox">
                 <img src={prod.imgUrl} alt={prod.name} />
@@ -19,8 +38,9 @@ function Product({ Products }) {
                     <span>Count In Stock: {prod.countInStock}</span>
                   </div>
                   <div className="price">
-                    <span className="price-after">{prod.price}</span>
-                    <span className="price-before"> Rs.</span>
+                    <span className="price-after">
+                      {numberFormater(prod.price, "curr")} Rs.
+                    </span>
                   </div>
                 </div>
               </div>
