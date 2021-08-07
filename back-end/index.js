@@ -53,8 +53,12 @@ app.get("/product", async function (req, res) {
   var relatedItems = await Product.find(JSON.parse(addDollerSign)).limit(10);
   res.status(200).json({ message: "success", user: relatedItems });
 });
+app.get("/products/wishlisted", async function (req, res) {
+  var likedProducts = await Product.find(req.query);
+  res.status(200).json({ message: "success", user: likedProducts });
+});
 
 //create listner request for the home <page>
-app.listen(8001, function () {
+app.listen(8000, function () {
   console.log("Example app listening on port 8000!");
 });
