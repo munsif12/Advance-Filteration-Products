@@ -17,19 +17,19 @@ function ProductDetail() {
 
   async function fetchProductDetail() {
     const { data } = await axios.get(
-      `http://localhost:8001/product/${params.id}`
+      `http://localhost:8000/product/${params.id}`
     );
     setProdDetails(data);
+    setFavIcon(false);
     const fetchRelatedTypes = await fetch(
-      `http://localhost:8001/product/?type[regex]=${data.type}&type[options]=i`
+      `http://localhost:8000/product/?type[regex]=${data.type}&type[options]=i`
     );
     const relatedProducts = await fetchRelatedTypes.json();
-    console.log(relatedProducts);
     setRelatedProducts(relatedProducts.user);
+    console.log(relatedProducts.user);
   }
   useEffect(() => {
     fetchProductDetail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
   function numberFormater(number, type) {
     return (
@@ -42,6 +42,20 @@ function ProductDetail() {
         decimalScale={2}
         fixedDecimalScale={type === "curr" ? true : false}
       />
+    );
+  }
+  function addToWishlist() {
+    setFavIcon(!favIcon);
+    localStorage.setItem(
+      "Wislisted-Product",
+      [localStorage.getItem("Wislisted-Product"), params.id].join(",")
+    );
+    localStorage.setItem(
+      "removedDublicatedWislistedProducts",
+      localStorage
+        .getItem("Wislisted-Product")
+        .split(",")
+        .filter((item, pos, self) => self.indexOf(item) === pos)
     );
   }
 
@@ -108,7 +122,11 @@ function ProductDetail() {
             <div className="prodQuantity">
               <p>
                 Quantity :
-                <select value={Qty} onChange={(e) => setQty(e.target.value)}>
+                <select
+                  value={Qty}
+                  disabled={prodDetails.countInStock <= 0 ? true : false}
+                  onChange={(e) => setQty(e.target.value)}
+                >
                   {/* //bit confued loking forward to implement */}
                   {[...Array(prodDetails.countInStock).keys()].map((val) => (
                     <option key={val + 1} value={val + 1}>
@@ -120,7 +138,7 @@ function ProductDetail() {
             </div>
             <div className="addToCartWrapper">
               <Button color="primary">Add to Cart</Button>
-              <Button color="primary" onClick={() => setFavIcon(!favIcon)}>
+              <Button color="primary" onClick={addToWishlist}>
                 {favIcon ? <FavoriteIcon /> : <FavoriteBorderIcon />}
               </Button>
             </div>
