@@ -40,13 +40,13 @@ function AllProducts() {
     if (SearchFiled) {
       if (!query) {
         const { data } = await axios.get(
-          `http://localhost:8001/?name[regex]=${SearchFiled}&name[options]=i`
+          `http://localhost:8000/?name[regex]=${SearchFiled}&name[options]=i`
         );
         setProducts(data.user);
         setTotalPages(data.totalPages);
       } else {
         const { data } = await axios.get(
-          `http://localhost:8001/${query}&name[regex]=${SearchFiled}&name[options]=i`
+          `http://localhost:8000/${query}&name[regex]=${SearchFiled}&name[options]=i`
         );
         setProducts(data.user);
         setTotalPages(data.totalPages);
@@ -54,19 +54,19 @@ function AllProducts() {
     } else {
       if (!query) {
         const { data } = await axios.get(
-          `http://localhost:8001/?page=${pageNumber}&limit=10`
+          `http://localhost:8000/?page=${pageNumber}&limit=10`
         );
         setProducts(data.user);
+        console.log(data);
         setTotalPages(data.totalPages);
       } else {
-        const { data } = await axios.get(`http://localhost:8001/${query}`);
+        const { data } = await axios.get(`http://localhost:8000/${query}`);
         setProducts(data.user);
         setTotalPages(data.totalPages);
       }
     }
   }
   useEffect(() => {
-    //create an axios fetch request to get the
     fetchProducts(pageNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [SearchFiled, pageNumber, filter, sorting]);
