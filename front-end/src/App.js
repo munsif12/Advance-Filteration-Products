@@ -3,6 +3,7 @@ import "./App.css";
 import backgroundImg from "./bgImg.png";
 import { Switch, Route } from "react-router-dom";
 import ProductDetail from "./Screens/ProductDetail/ProductDetail";
+import WishlistedProducts from "./Screens/Wislist-Products/WishlistedProducts";
 function App() {
   return (
     <div
@@ -11,7 +12,12 @@ function App() {
     >
       <Switch>
         <Route exact path="/" component={AllProducts} />
-        <Route path="/product/:id" component={ProductDetail} />
+        <Route exact path="/product/:id" component={ProductDetail} />
+        <Route
+          exact
+          path="/products/wishlisted"
+          component={WishlistedProducts}
+        />
       </Switch>
     </div>
   );
