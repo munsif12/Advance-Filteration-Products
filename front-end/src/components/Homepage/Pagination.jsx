@@ -6,7 +6,9 @@ function Pagination({
   gotoNext,
   pages,
   setPageNumber,
+  pageNumber,
 }) {
+  console.log(pages);
   return (
     <>
       {SearchFiled === "" && (
@@ -14,7 +16,7 @@ function Pagination({
           <Button
             type="primary"
             className="pagination"
-            disabled={pages.length >= 2 ? false : true}
+            disabled={pageNumber === 1 ? true : false}
             onClick={gotoPrevious}
           >
             Previous Page
@@ -32,7 +34,7 @@ function Pagination({
           <Button
             type="primary"
             className="pagination"
-            disabled={pages.length >= 2 ? false : true}
+            disabled={pageNumber === pages.length - 1 ? false : true}
             onClick={gotoNext}
           >
             Next Page
