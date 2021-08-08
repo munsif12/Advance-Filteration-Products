@@ -311,3 +311,64 @@ html {
     color-stop(0.86, rgb(28, 58, 148))
   );
 }
+.w_prod {
+  padding: 10px 5px;
+}
+.w_commonProduct {
+  background-color: white;
+  border-radius: 5px;
+  gap: 20px;
+  width: 60%;
+  box-shadow: 0 0 12px 4px rgba(130, 130, 130, 0.583);
+}
+.w_commonProduct {
+  display: flex;
+}
+.w_imgBox {
+  height: 100%;
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.w_imgBox > img {
+  width: 90%;
+  height: 90%;
+  border-radius: 5px;
+}
+.removeForLike {
+  z-index: 9999999;
+}
+.nameAndDesc {
+  width: 50%;
+}
+.priceCIS {
+  margin-top: 5px;
+  width: 22%;
+}
+.w_price-after,
+.w_CIS {
+  font-size: 15px;
+  font-weight: bold;
+}
+.removeForLike {
+  width: min-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.removeForLike svg {
+  transform: scale(1.3);
+  color: red;
+}
+/* write media query for small device */
+@media (max-width: 1000px) {
+  .addtoCart {
+    height: 30vh;
+  }
+}
+@media (max-width: 750px) {
+  .w_commonProduct {
+    width: 90%;
+  }
+}
