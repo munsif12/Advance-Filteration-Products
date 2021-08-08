@@ -103,6 +103,7 @@ function AllProducts() {
         gotoNext={gotoNext}
         pages={pages}
         setPageNumber={setPageNumber}
+        pageNumber={pageNumber}
       />
     </div>
   );
