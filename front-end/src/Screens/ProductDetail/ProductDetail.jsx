@@ -10,7 +10,6 @@ import axios from "axios";
 function ProductDetail() {
   const [prodDetails, setProdDetails] = useState({});
   const [RelatedProducts, setRelatedProducts] = useState([]);
-  console.log(RelatedProducts);
   const params = useParams();
   const [Qty, setQty] = useState(1);
   const [favIcon, setFavIcon] = useState(false);
@@ -26,6 +25,10 @@ function ProductDetail() {
     );
     const relatedProducts = await fetchRelatedTypes.json();
     setRelatedProducts(relatedProducts.user);
+    //checking if the id is present in the wishlist or not
+    localStorage.getItem("Wislisted-Product").split(",").includes(params.id)
+      ? setFavIcon(true)
+      : setFavIcon(false);
     console.log(relatedProducts.user);
   }
   useEffect(() => {
@@ -45,26 +48,57 @@ function ProductDetail() {
       />
     );
   }
-  function addToWishlist() {
-    setFavIcon(!favIcon);
-    localStorage.setItem(
-      "Wislisted-Product",
-      [localStorage.getItem("Wislisted-Product"), params.id].join(",")
-    );
-    localStorage.setItem(
-      "removedDublicatedWislistedProducts",
-      localStorage
-        .getItem("Wislisted-Product")
-        .split(",")
-        .filter((item, pos, self) => self.indexOf(item) === pos)
-    );
+  function getItemFromLocalSotrageAndMakeAnArray() {
+    // console.log(localStorage.getItem("Wislisted-Product").split(","));
+    const getlikedItemsFromLocalStorage = localStorage
+      .getItem("removedDublicatedWislistedProducts")
+      .split(",");
+    // .filter((item, index, self) => self.indexOf(item) === index); //to remove duplicate
+    getlikedItemsFromLocalStorage.splice(0, 1); //to remove the first comma [",","ids","ids"]
+    return getlikedItemsFromLocalStorage;
+  }
+  function addOrRemoveItemFromWishlist() {
+    console.log("working");
+    const checkifWishListisNull = localStorage.getItem("Wislisted-Product");
+    console.log(favIcon);
+    if (!favIcon) {
+      if (checkifWishListisNull) {
+        setFavIcon(true);
+        //add item to localstorage
+        localStorage.setItem(
+          "Wislisted-Product",
+          [localStorage.getItem("Wislisted-Product"), params.id].join(",")
+        );
+        //now remove the duplicate items
+        localStorage.setItem(
+          "removedDublicatedWislistedProducts",
+          localStorage
+            .getItem("Wislisted-Product")
+            .split(",")
+            .filter((item, pos, self) => self.indexOf(item) === pos)
+        );
+      }
+    } else {
+      if (favIcon) {
+        const wishlistedProducts = getItemFromLocalSotrageAndMakeAnArray();
+        console.log(wishlistedProducts);
+        const removeTheIdFromArray = wishlistedProducts.filter(
+          (item) => item !== params.id
+        );
+        localStorage.setItem(
+          "removedDublicatedWislistedProducts",
+          `,${removeTheIdFromArray.join(",")}`
+        );
+        setFavIcon(false);
+      }
+    }
   }
 
   return (
     <div className="ProductDetail">
       <div className="PdetailsWrapper container">
         <div className="row gap-4 rowHeight">
-          <div className="col col-md-5 col-lg-5  p-3 productImage">
+          <div className="col col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-5  p-3 productImage">
             <div className="pImageWrapper">
               {/* <img src={prodDetails.imgUrl} alt={prodDetails.name} /> */}
               <ReactImageMagnify
@@ -97,7 +131,7 @@ function ProductDetail() {
               />
             </div>
           </div>
-          <div className="col col-md-4 col-lg-4 productDetails">
+          <div className="col col-xs-12 col-sm-12 col-md-5 col-lg-4 col-xl-4 productDetails">
             <div className="prodName">
               <h1>{prodDetails.name}</h1>
             </div>
@@ -119,7 +153,7 @@ function ProductDetail() {
               </h5>
             </div>
           </div>
-          <div className="col col-md-2 col-lg-2 addtoCart">
+          <div className="col col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-2 addtoCart">
             <div className="prodQuantity">
               <p>
                 Quantity :
@@ -139,14 +173,13 @@ function ProductDetail() {
             </div>
             <div className="addToCartWrapper">
               <Button color="primary">Add to Cart</Button>
-              <Button color="primary" onClick={addToWishlist}>
+              <Button color="primary" onClick={addOrRemoveItemFromWishlist}>
                 {favIcon ? <FavoriteIcon /> : <FavoriteBorderIcon />}
               </Button>
             </div>
           </div>
         </div>
       </div>
-
       <RealtedProducts realtedProducts={RelatedProducts} />
     </div>
   );
