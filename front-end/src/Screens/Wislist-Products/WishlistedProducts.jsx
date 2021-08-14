@@ -47,8 +47,9 @@ function WishlistedProducts() {
   useEffect(() => {
     fetchProductDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  async function removeItemFromWishlist(pId) {
+  }, [wishlistItems]);
+  async function removeItemFromWishlist(e, pId) {
+    e.stopPropagation();
     const wishlistedProducts = getItemFromLocalSotrageAndMakeAnArray();
     console.log(wishlistedProducts);
     const removeTheIdFromArray = wishlistedProducts.filter(
@@ -75,7 +76,8 @@ function WishlistedProducts() {
             <div
               className="row w_singleProd w_prod"
               key={index}
-              // onClick={() => history.push(`/product/${prod._id}`)}
+              onClick={() => history.push(`/product/${prod._id}`)}
+              style={{ cursor: "pointer" }}
             >
               <div
                 key={index}
@@ -104,7 +106,7 @@ function WishlistedProducts() {
                 </div>
                 <div
                   className="removeForLike"
-                  onClick={() => removeItemFromWishlist(prod._id)}
+                  onClick={(e) => removeItemFromWishlist(e, prod._id)}
                 >
                   <abbr title="Remove from Wishlist">
                     <RemoveCircleOutlineIcon />
