@@ -57,12 +57,13 @@ function ProductDetail() {
     getlikedItemsFromLocalStorage.splice(0, 1); //to remove the first comma [",","ids","ids"]
     return getlikedItemsFromLocalStorage;
   }
+  ///product details
   function addOrRemoveItemFromWishlist() {
     console.log("working");
     const checkifWishListisNull = localStorage.getItem("Wislisted-Product");
     console.log(favIcon);
-    if (!favIcon) {
-      if (checkifWishListisNull) {
+    if (checkifWishListisNull) {
+      if (!favIcon) {
         setFavIcon(true);
         //add item to localstorage
         localStorage.setItem(
@@ -78,7 +79,6 @@ function ProductDetail() {
             .filter((item, pos, self) => self.indexOf(item) === pos)
         );
       }
-    } else {
       if (favIcon) {
         const wishlistedProducts = getItemFromLocalSotrageAndMakeAnArray();
         console.log(wishlistedProducts);
@@ -91,6 +91,20 @@ function ProductDetail() {
         );
         setFavIcon(false);
       }
+    } else {
+      //add item to localstorage
+      localStorage.setItem(
+        "Wislisted-Product",
+        [localStorage.getItem("Wislisted-Product"), params.id].join(",")
+      );
+      //now remove the duplicate items
+      localStorage.setItem(
+        "removedDublicatedWislistedProducts",
+        localStorage
+          .getItem("Wislisted-Product")
+          .split(",")
+          .filter((item, pos, self) => self.indexOf(item) === pos)
+      );
     }
   }
 
