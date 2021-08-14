@@ -13,6 +13,7 @@ html {
 }
 .App {
   min-height: 100vh;
+  margin-top: 63px;
 }
 .f_common {
   padding: 10px;
