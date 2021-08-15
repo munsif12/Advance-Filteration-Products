@@ -112,7 +112,7 @@ function ProductDetail() {
     <div className="ProductDetail">
       <div className="PdetailsWrapper container">
         <div className="row gap-4 rowHeight">
-          <div className="col col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-5  p-3 productImage">
+          <div className=" col-xs-10 col-sm-10 col-md-6 col-lg-4 col-xl-5  p-3 productImage">
             <div className="pImageWrapper">
               {/* <img src={prodDetails.imgUrl} alt={prodDetails.name} /> */}
               <ReactImageMagnify
@@ -145,7 +145,7 @@ function ProductDetail() {
               />
             </div>
           </div>
-          <div className="col col-xs-12 col-sm-12 col-md-5 col-lg-4 col-xl-4 productDetails">
+          <div className=" col-xs-10 col-sm-10 col-md-5 col-lg-4 col-xl-4 productDetails">
             <div className="prodName">
               <h1>{prodDetails.name}</h1>
             </div>
@@ -167,7 +167,7 @@ function ProductDetail() {
               </h5>
             </div>
           </div>
-          <div className="col col-xs-12 col-sm-12 col-md-12 col-lg-3 col-xl-2 addtoCart">
+          <div className=" col-xs-10 col-sm-10 col-md-12 col-lg-3 col-xl-2 addtoCart">
             <div className="prodQuantity">
               <p>
                 Quantity :
