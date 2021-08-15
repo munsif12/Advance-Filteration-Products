@@ -18,7 +18,7 @@ function App() {
         <Route
           exact
           path="/products/wishlisted"
-          component={WishlistedProducts}
+          omponent={WishlistedProducts}
         />
       </Switch>
     </div>
