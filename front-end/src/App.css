@@ -56,10 +56,6 @@ html {
   justify-content: space-evenly;
   align-items: center;
 }
-/* .searchBar {
-  width: 100%;
-  border: 1px solid black;
-} */
 .searchBar form {
   width: 50%;
   display: inline-block;
@@ -372,4 +368,15 @@ html {
   .w_commonProduct {
     width: 90%;
   }
+}
+/* navbar */
+.noOfWislistItems {
+  height: 23px;
+  width: 29px;
+  margin-left: 5px;
+  font-weight: bolder;
+  font-size: 30px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
