@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -19,14 +19,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
+  const [noOfprods, setnoOfprods] = useState([]);
   const classes = useStyles();
-  console.log();
+  function getNoOfFavsProd() {
+    const arr = localStorage
+      .getItem("removedDublicatedWislistedProducts")
+      .split(",");
+    arr.splice(0, 1);
+    setnoOfprods(arr);
+  }
+  useEffect(() => {
+    getNoOfFavsProd();
+  }, []);
   return (
-    /* 'default'
-| 'inherit'
-| 'primary'
-| 'secondary'
-| 'transparent'     */
     <div className={classes.root}>
       <AppBar color="inherit" position="fixed">
         <Toolbar>
@@ -48,7 +53,8 @@ export default function Navbar() {
             style={{ color: "Black", paddingRight: "10px" }}
           >
             <Button color="inherit" variant="contained">
-              Wishlist
+              Wishlist{" "}
+              <span className="noOfWislistItems">{noOfprods.length}</span>
             </Button>
           </NavLink>
 
