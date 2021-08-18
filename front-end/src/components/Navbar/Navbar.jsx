@@ -60,7 +60,7 @@ export default function Navbar() {
 
           <NavLink
             exact
-            to={"/"}
+            to={"/cart"}
             style={{ color: "Black", paddingRight: "10px" }}
           >
             <Button color="inherit" variant="contained">
