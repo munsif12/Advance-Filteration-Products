@@ -5,6 +5,7 @@ import { Switch, Route } from "react-router-dom";
 import ProductDetail from "./Screens/ProductDetail/ProductDetail";
 import WishlistedProducts from "./Screens/Wislist-Products/WishlistedProducts";
 import Navbar from "./components/Navbar/Navbar";
+import Cart from "./Screens/Cart/Cart";
 function App() {
   return (
     <div
@@ -18,8 +19,9 @@ function App() {
         <Route
           exact
           path="/products/wishlisted"
-          omponent={WishlistedProducts}
+          component={WishlistedProducts}
         />
+        <Route exact path="/cart" component={Cart} />
       </Switch>
     </div>
   );
